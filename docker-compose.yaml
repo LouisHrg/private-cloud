@@ -497,11 +497,11 @@ volumes:
   #     type: none
   #     device: /mnt/files/cozy
   files_cryptpad_volume: # It stores the cryptpad data
-    driver: local
-    driver_opts:
-      o: bind
-      type: none
-      device: /mnt/files/cryptpad
+    # driver: local
+    # driver_opts:
+    #   o: bind
+    #   type: none
+    #   device: /mnt/files/cryptpad
   # mails_volume: # It stores the mail data
   #   driver: local
   #   driver_opts:

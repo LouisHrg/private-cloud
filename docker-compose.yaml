@@ -328,22 +328,22 @@ services:
   #     - /var/run/docker.sock:/var/run/docker.sock:ro
 
   # kvtiles (Maps)
-  maps:
-    # See https://hub.docker.com/r/akhenakh/kvtiles/tags for available tags / zooms
-    image: akhenakh/kvtiles:planet-10-latest
-    container_name: maps
-    restart: unless-stopped
-    command: ["-tilesKey=${MAPS_API_KEY}"] # entrypoint is ["./kvtilesd"]
-    networks:
-      - maps_network
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.maps.entrypoints=websecure"
-      - "traefik.http.routers.maps.rule=Host(`${MAPS_DOMAIN}`)"
-      - "traefik.http.routers.maps.tls=true"
-      - "traefik.http.routers.maps.tls.certresolver=default"
-      - "traefik.http.routers.maps.middlewares=security@file"
-      - "traefik.http.services.maps.loadbalancer.server.port=8080"
+  # maps:
+  #   # See https://hub.docker.com/r/akhenakh/kvtiles/tags for available tags / zooms
+  #   image: akhenakh/kvtiles:planet-10-latest
+  #   container_name: maps
+  #   restart: unless-stopped
+  #   command: ["-tilesKey=${MAPS_API_KEY}"] # entrypoint is ["./kvtilesd"]
+  #   networks:
+  #     - maps_network
+  #   labels:
+  #     - "traefik.enable=true"
+  #     - "traefik.http.routers.maps.entrypoints=websecure"
+  #     - "traefik.http.routers.maps.rule=Host(`${MAPS_DOMAIN}`)"
+  #     - "traefik.http.routers.maps.tls=true"
+  #     - "traefik.http.routers.maps.tls.certresolver=default"
+  #     - "traefik.http.routers.maps.middlewares=security@file"
+  #     - "traefik.http.services.maps.loadbalancer.server.port=8080"
 
   # Cryptpad (Documents)
   # See https://github.com/xwiki-labs/cryptpad

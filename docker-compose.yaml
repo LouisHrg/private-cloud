@@ -15,17 +15,7 @@ services:
     networks:
       - cryptpad_network
     ports:
-    #  - "80:80"
       - "443:443"
-    #labels:
-      # - "traefik.enable=true"
-      # - "traefik.http.routers.api.rule=Host(`${STATUS_DOMAIN}`)"
-      # - "traefik.http.routers.api.service=api@internal"
-      # - "traefik.http.routers.api.tls=true"
-      # - "traefik.http.routers.api.tls.certresolver=default"
-      # - "traefik.http.middlewares.auth.basicauth.users=${STATUS_CREDENTIALS}"
-      # - "traefik.http.routers.api.middlewares=auth"
-      # - "traefik.http.routers.api.middlewares=security@file"
 
   cryptpad:
     build:
@@ -38,6 +28,7 @@ services:
     restart: unless-stopped
     volumes:
       - files_cryptpad_volume:/cryptpad/data
+      - ./customize/cryptpad:/cryptpad/customize
     networks:
       - cryptpad_network
     labels:

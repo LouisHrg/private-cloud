@@ -7,12 +7,12 @@
 */
 define(['/common/application_config_internal.js'], function (AppConfig) {
     AppConfig.surveyURL = "";
-    AppConfig.availablePadTypes = ['drive', 'pad', 'sheet', 'code'];
-    AppConfig.registeredOnlyTypes = ['drive', 'pad', 'sheet', 'code'];
+    //AppConfig.availablePadTypes = ['drive', 'pad', 'sheet', 'code'];
+    //AppConfig.registeredOnlyTypes = ['drive', 'pad', 'sheet', 'code'];
     AppConfig.hideLoadingScreenTips = true;
-    AppConfig.availableLanguages = ['en'];
+    AppConfig.availableLanguages = ['fr', 'en'];
     AppConfig.disableAnonymousStore = true;
-    AppConfig.disableAnonymousPadCreation = true
+    //AppConfig.disableAnonymousPadCreation = true
     AppConfig.disableCrowdfundingMessages = true;
     AppConfig.disableFeedback = true;
     AppConfig.logFeedback = false;

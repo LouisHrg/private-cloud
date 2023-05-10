@@ -21,7 +21,7 @@ services:
 
   maps:
     # See https://hub.docker.com/r/akhenakh/kvtiles/tags for available tags / zooms
-    image: akhenakh/kvtiles:planet-10-latest
+    image: akhenakh/kvtiles:france-13-latest
     container_name: maps
     restart: unless-stopped
     command: ["-tilesKey=maps.narah.io"] # entrypoint is ["./kvtilesd"]

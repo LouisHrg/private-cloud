@@ -35,6 +35,59 @@ services:
       - "traefik.http.routers.maps.middlewares=security@file"
       - "traefik.http.services.maps.loadbalancer.server.port=8080"
 
+  database:
+    image: postgis/postgis:13-master
+    volumes:
+      - directus-data:/var/lib/postgresql/data
+    networks:
+      - directus_network
+    environment:
+      POSTGRES_USER: '${POSTGRES_USER}'
+      POSTGRES_PASSWORD: '${POSTGRES_PASSWORD}'
+      POSTGRES_DB: '${POSTGRES_DB}'
+
+  cache:
+    image: redis:6
+    networks:
+      - directus_network
+
+  directus:
+    image: directus/directus:latest
+    ports:
+      - 8055:8055
+    volumes:
+      - directus-uploads:/directus/uploads
+      - ./directus/modules:/directus/extensions/modules
+    networks:
+      - directus_network
+    depends_on:
+      - cache
+      - database
+    environment:
+      KEY: '${DIRECTUS_KEY}'
+      SECRET: '${DIRECTUS_SECRET}'
+
+      DB_CLIENT: 'pg'
+      DB_HOST: 'database'
+      DB_PORT: '5432'
+      DB_DATABASE: '${POSTGRES_DB}'
+      DB_USER: '${POSTGRES_USER}'
+      DB_PASSWORD: '${POSTGRES_PASSWORD}'
+
+      CACHE_ENABLED: 'false'
+      CACHE_STORE: 'redis'
+      CACHE_REDIS: 'redis://cache:6379'
+
+      ADMIN_EMAIL: '${DIRECTUS_ADMIN_EMAIL}'
+      ADMIN_PASSWORD: '${DIRECTUS_ADMIN_PWD}'
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.api.entrypoints=websecure"
+      - "traefik.http.routers.api.rule=Host(`api.narah.io`)"
+      - "traefik.http.routers.api.tls=true"
+      - "traefik.http.routers.api.tls.certresolver=default"
+      - "traefik.http.routers.api.middlewares=security@file"
+      - "traefik.http.services.api.loadbalancer.server.port=8055"
 
   cryptpad:
     build:
@@ -75,11 +128,18 @@ services:
       - "traefik.http.middlewares.cryptpad-unsafe-chain.chain.middlewares=custom2,cryptpad@file,security@file"
       - "traefik.http.routers.cryptpad-unsafe.middlewares=cryptpad-unsafe-chain"
 
+
+
+
+
 networks:
   cryptpad_network: ~
   maps_network: ~
+  directus_network: ~
 
 volumes:
   certificates:
     name: certificates
   files_cryptpad_volume:
+  directus-data:
+  directus-uploads:

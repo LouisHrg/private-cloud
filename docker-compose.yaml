@@ -15,6 +15,7 @@ services:
     networks:
       - cryptpad_network
       - maps_network
+      - directus_network
     ports:
       - "443:443"
 
@@ -127,9 +128,6 @@ services:
       - "traefik.http.middlewares.custom2.headers.contentSecurityPolicy=default-src 'none'; child-src https://pad.narah.io; worker-src 'self'; media-src blob:; style-src 'unsafe-inline' 'self' https://pad.narah.io; script-src 'self' 'unsafe-eval' 'unsafe-inline' resource: https://pad.narah.io; connect-src 'self' https://pad.narah.io blob: wss://pad.narah.io https://sb.narah.io; font-src 'self' data: https://pad.narah.io; img-src 'self' data: blob: https://pad.narah.io; frame-src 'self' https://sb.narah.io blob:; frame-ancestors 'self' https://pad.narah.io"
       - "traefik.http.middlewares.cryptpad-unsafe-chain.chain.middlewares=custom2,cryptpad@file,security@file"
       - "traefik.http.routers.cryptpad-unsafe.middlewares=cryptpad-unsafe-chain"
-
-
-
 
 
 networks:

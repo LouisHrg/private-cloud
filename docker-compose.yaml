@@ -19,23 +19,6 @@ services:
     ports:
       - "443:443"
 
-  maps:
-    # See https://hub.docker.com/r/akhenakh/kvtiles/tags for available tags / zooms
-    image: akhenakh/kvtiles:france-13-latest
-    container_name: maps
-    restart: unless-stopped
-    command: ["-tilesKey=maps.narah.io"] # entrypoint is ["./kvtilesd"]
-    networks:
-      - maps_network
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.maps.entrypoints=websecure"
-      - "traefik.http.routers.maps.rule=Host(`maps.narah.io`)"
-      - "traefik.http.routers.maps.tls=true"
-      - "traefik.http.routers.maps.tls.certresolver=default"
-      - "traefik.http.routers.maps.middlewares=security@file"
-      - "traefik.http.services.maps.loadbalancer.server.port=8080"
-
   database:
     image: postgis/postgis:13-master
     volumes:

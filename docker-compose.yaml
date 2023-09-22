@@ -17,6 +17,7 @@ services:
       - maps_network
       - directus_network
       - dav_network
+      - ntfy_network
     ports:
       - "443:443"
 
@@ -35,6 +36,8 @@ services:
         retries: 3
         start_period: 40s
     restart: unless-stopped
+    networks:
+      - ntfy_network
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.ntfy.entrypoints=websecure"
@@ -142,6 +145,7 @@ networks:
   maps_network: ~
   directus_network: ~
   dav_network: ~
+  ntfy_network: ~
 
 volumes:
   certificates:

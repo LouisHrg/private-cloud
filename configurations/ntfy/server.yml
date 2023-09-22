@@ -1,0 +1,2 @@
+base-url: "https://ntfy.sh"
+attachment-cache-dir: "/var/cache/ntfy/attachments"

@@ -1,2 +1,4 @@
-base-url: "https://ntfy.sh"
+base-url: "https://ntfy.narah.app"
 attachment-cache-dir: "/var/cache/ntfy/attachments"
+auth-file: "/var/lib/ntfy/user.db"
+auth-default-access: "deny-all"

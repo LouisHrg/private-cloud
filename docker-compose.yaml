@@ -17,36 +17,9 @@ services:
       - maps_network
       - directus_network
       - dav_network
-      - ntfy_network
+      - navidrome_network
     ports:
       - "443:443"
-
-  ntfy:
-    image: binwiederhier/ntfy
-    container_name: ntfy
-    command:
-      - serve
-    volumes:
-      - /var/cache/ntfy:/var/cache/ntfy
-      - ./configurations/ntfy/:/etc/ntfy
-      - /var/lib/ntfy:/var/lib/ntfy/user.db
-    healthcheck:
-        test: ["CMD-SHELL", "wget -q --tries=1 http://localhost:80/v1/health -O - | grep -Eo '\"healthy\"\\s*:\\s*true' || exit 1"]
-        interval: 60s
-        timeout: 10s
-        retries: 3
-        start_period: 40s
-    restart: unless-stopped
-    networks:
-      - ntfy_network
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.ntfy.entrypoints=websecure"
-      - "traefik.http.routers.ntfy.rule=Host(`${NTFY_DOMAIN}`)"
-      - "traefik.http.routers.ntfy.tls=true"
-      - "traefik.http.routers.ntfy.tls.certresolver=default"
-      - "traefik.http.routers.ntfy.middlewares=security@file"
-      - "traefik.http.services.ntfy.loadbalancer.server.port=80"
 
   database:
     image: postgis/postgis:13-master
@@ -102,25 +75,54 @@ services:
       - "traefik.http.routers.api.middlewares=security@file"
       - "traefik.http.services.api.loadbalancer.server.port=8055"
 
-  kino:
-    build:
-      context: ./
-      dockerfile: ./build/Dockerfile-kino
-    container_name: kino
+  navidrome:
+    image: deluan/navidrome:latest
+    ports:
+      - "4533:4533"
     restart: unless-stopped
-    environment:
-      VITE_CORS_PROXY_URL: '${VITE_CORS_PROXY_URL}'
-      VITE_TMDB_READ_API_KEY: '${VITE_TMDB_READ_API_KEY}'
     networks:
-      - kino_network
+      - navidrome_network
+    environment:
+      ND_SCANSCHEDULE: 1h
+      ND_LOGLEVEL: info
+      ND_SESSIONTIMEOUT: 24h
+      ND_BASEURL: ""
+      ND_SPOTIFY_ID: ${ND_SPOTIFY_ID}
+      ND_SPOTIFY_SECRET: ${ND_SPOTIFY_SECRET}
+    volumes:
+      - ./navidrome/data:/data
+      - ./navidrome/music:/music:ro
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.kino.entrypoints=websecure"
-      - "traefik.http.routers.kino.rule=Host(`${KINO_DOMAIN}`)"
-      - "traefik.http.routers.kino.tls=true"
-      - "traefik.http.routers.kino.tls.certresolver=default"
-      - "traefik.http.routers.kino.middlewares=security@file"
-      - "traefik.http.services.kino.loadbalancer.server.port=4173"
+      - "traefik.http.routers.music.entrypoints=websecure"
+      - "traefik.http.routers.music.rule=Host(`${MUSIC_DOMAIN}`)"
+      - "traefik.http.routers.music.tls=true"
+      - "traefik.http.routers.music.tls.certresolver=default"
+      - "traefik.http.routers.music.middlewares=security@file"
+      - "traefik.http.services.music.loadbalancer.server.port=4533"
+
+  flatnotes:
+    image: dullage/flatnotes:latest
+    environment:
+      PUID: 1000
+      PGID: 1000
+      FLATNOTES_AUTH_TYPE: "password"
+      FLATNOTES_USERNAME: "ami"
+      FLATNOTES_PASSWORD: ${FLATNOTES_PASSWORD}
+      FLATNOTES_SECRET_KEY: ${FLATNOTES_SECRET_KEY}
+    volumes:
+      - "./flatnotes:/data"
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.flatnotes.entrypoints=websecure"
+      - "traefik.http.routers.flatnotes.rule=Host(`${FLATNOTES_DOMAIN}`)"
+      - "traefik.http.routers.flatnotes.tls=true"
+      - "traefik.http.routers.flatnotes.tls.certresolver=default"
+      - "traefik.http.routers.flatnotes.middlewares=security@file"
+      - "traefik.http.services.flatnotes.loadbalancer.server.port=8080"
 
 
   cryptpad:
@@ -167,8 +169,8 @@ networks:
   maps_network: ~
   directus_network: ~
   dav_network: ~
-  ntfy_network: ~
-  kino_network: ~
+  navidrome_network: ~
+
 
 volumes:
   certificates:

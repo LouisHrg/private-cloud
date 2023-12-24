@@ -18,6 +18,7 @@ services:
       - directus_network
       - dav_network
       - navidrome_network
+      - flatnotes_network
     ports:
       - "443:443"
 
@@ -115,6 +116,8 @@ services:
     ports:
       - "8080:8080"
     restart: unless-stopped
+    networks:
+      - flatnotes_network
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.flatnotes.entrypoints=websecure"
@@ -170,6 +173,7 @@ networks:
   directus_network: ~
   dav_network: ~
   navidrome_network: ~
+  flatnotes_network: ~
 
 
 volumes:

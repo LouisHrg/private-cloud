@@ -16,3 +16,5 @@ configurations/mails/dovecot.conf
 configurations/mails/aliases
 configurations/mails/virtuals
 configurations/mails/dkim-*
+navidrome
+flatnotes

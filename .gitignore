@@ -18,3 +18,5 @@ configurations/mails/virtuals
 configurations/mails/dkim-*
 navidrome
 flatnotes
+gonic
+filebrowser

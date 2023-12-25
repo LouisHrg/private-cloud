@@ -14,11 +14,11 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     networks:
       - cryptpad_network
-      - maps_network
       - directus_network
       - dav_network
       - navidrome_network
       - flatnotes_network
+      - filebrowser_network
     ports:
       - "443:443"
 
@@ -37,6 +37,23 @@ services:
     image: redis:6
     networks:
       - directus_network
+
+  filebrowser:
+    image: filebrowser/filebrowser
+    networks:
+      - filebrowser_network
+    volumes:
+      - ./navidrome/music:/srv
+    ports:
+      - 8888:80
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.filebrowser.entrypoints=websecure"
+      - "traefik.http.routers.filebrowser.rule=Host(`dir.narah.app`)"
+      - "traefik.http.routers.filebrowser.tls=true"
+      - "traefik.http.routers.filebrowser.tls.certresolver=default"
+      - "traefik.http.routers.filebrowser.middlewares=security@file"
+      - "traefik.http.services.filebrowser.loadbalancer.server.port=80"
 
   directus:
     image: directus/directus:latest
@@ -90,6 +107,9 @@ services:
       ND_BASEURL: ""
       ND_SPOTIFY_ID: ${ND_SPOTIFY_ID}
       ND_SPOTIFY_SECRET: ${ND_SPOTIFY_SECRET}
+      ND_UILOGINBACKGROUNDURL: ''
+      ND_ENABLEGRAVATAR: true
+      ND_UIWELCOMEMESSAGE: 'va voir 3ami brahim'
     volumes:
       - ./navidrome/data:/data
       - ./navidrome/music:/music:ro
@@ -169,10 +189,10 @@ services:
 
 networks:
   cryptpad_network: ~
-  maps_network: ~
   directus_network: ~
   dav_network: ~
   navidrome_network: ~
+  filebrowser_network: ~
   flatnotes_network: ~
 
 

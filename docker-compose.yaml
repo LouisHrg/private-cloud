@@ -43,7 +43,8 @@ services:
     networks:
       - filebrowser_network
     volumes:
-      - ./navidrome/music:/srv
+      - ./navidrome/music:/srv/music
+      - ./photos:/srv/photos
     ports:
       - 8888:80
     labels:
@@ -201,6 +202,7 @@ volumes:
     name: certificates
   files_cryptpad_volume:
   directus-data:
+  photoview_cache:
   directus-uploads:
   davis_www:
   files_webdav_volume:

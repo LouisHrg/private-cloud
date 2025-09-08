@@ -108,11 +108,38 @@ services:
       - "traefik.http.routers.flatnotes.middlewares=security@file"
       - "traefik.http.services.flatnotes.loadbalancer.server.port=8080"
 
+
+  transmission:
+    image: lscr.io/linuxserver/transmission:latest
+    container_name: transmission
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+    volumes:
+      - ./transmission/config:/config
+      - ./transmission/downloads:/downloads
+    ports:
+      - 51413:51413
+      - 51413:51413/udp
+    restart: unless-stopped
+    networks:
+      - transmission_network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.transmission.entrypoints=websecure"
+      - "traefik.http.routers.transmission.rule=Host(`${API_DOMAIN}`)"
+      - "traefik.http.routers.transmission.tls=true"
+      - "traefik.http.routers.transmission.tls.certresolver=default"
+      - "traefik.http.routers.transmission.middlewares=security@file"
+      - "traefik.http.services.transmission.loadbalancer.server.port=9091"
+    
 networks:
   directus_network: ~
   navidrome_network: ~
   filebrowser_network: ~
   flatnotes_network: ~
+  transmission_network: ~
 
 
 volumes:

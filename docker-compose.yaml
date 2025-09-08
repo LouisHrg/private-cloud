@@ -17,6 +17,7 @@ services:
       - navidrome_network
       - flatnotes_network
       - filebrowser_network
+      - transmission_network
     ports:
       - "443:443"
 

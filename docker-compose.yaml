@@ -44,6 +44,7 @@ services:
     volumes:
       - ./navidrome/music:/srv/music
       - ./photos:/srv/photos
+      - ./transmission/downloads:/srv/transmission
     ports:
       - 8888:80
     labels:
